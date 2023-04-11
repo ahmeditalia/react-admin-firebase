@@ -72,15 +72,22 @@ export async function paramsToQuery<
 export function getFiltersConstraints(filters: {
   [fieldName: string]: any;
 }): QueryConstraint[] {
-  return Object.entries(filters).flatMap(([fieldName, fieldValue]) => {
-    if (Array.isArray(fieldValue)) {
-      return [where(fieldName, 'in', fieldValue)];
+  const queries = Object.entries(filters).flatMap(([fieldName, fieldValue]) => {
+    if (typeof fieldValue === 'object') {
+      return Object.entries(fieldValue).flatMap(([key, value]) => {
+        console.log(key);
+        if (key == 'equals') return [where(fieldName, '==', value)];
+        if (key == 'gte') return [where(fieldName, '>=', value)];
+        if (key == 'lte') return [where(fieldName, '<=', value)];
+        return [where(fieldName, '==', value)];
+      });
     } else {
       return [where(fieldName, '==', fieldValue)];
     }
   });
+  console.log(queries);
+  return queries;
 }
-
 export function getSortConstraints(sort: {
   field: string;
   order: string;
