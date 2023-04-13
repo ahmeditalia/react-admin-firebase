@@ -74,22 +74,29 @@ export function getFiltersConstraints(filters: {
 }): QueryConstraint[] {
   const queries = Object.entries(filters).flatMap(([fieldName, fieldValue]) => {
     if (typeof fieldValue === 'object') {
-      return Object.entries(fieldValue).flatMap(([key, value]) => {
-        console.log(key);
-        if (key == 'equals') return [where(fieldName, '==', value)];
-        if (key == 'notEquals') return [where(fieldName, '!=', value)];
-        if (key == 'gte') return [where(fieldName, '>=', value)];
-        if (key == 'gt') return [where(fieldName, '>', value)];
-        if (key == 'lte') return [where(fieldName, '<=', value)];
-        if (key == 'lt') return [where(fieldName, '<', value)];
-        if (key == 'array-contains')
-          return [where(fieldName, 'array-contains', value)];
-        if (key == 'array-contains-any')
-          return [where(fieldName, 'array-contains-any', value)];
-        if (key == 'in') return [where(fieldName, 'in', value)];
-        if (key == 'not-in') return [where(fieldName, 'not-in', value)];
-        return [where(fieldName, '==', value)];
-      });
+      return Object.entries(fieldValue).flatMap(
+        ([key, value]: [key: string, value: any]) => {
+          console.log(key);
+          if (key == 'equals') return [where(fieldName, '==', value)];
+          if (key == 'notEquals') return [where(fieldName, '!=', value)];
+          if (key == 'gte') return [where(fieldName, '>=', value)];
+          if (key == 'gt') return [where(fieldName, '>', value)];
+          if (key == 'lte') return [where(fieldName, '<=', value)];
+          if (key == 'lt') return [where(fieldName, '<', value)];
+          if (key == 'array-contains')
+            return [where(fieldName, 'array-contains', value)];
+          if (key == 'array-contains-any')
+            return [where(fieldName, 'array-contains-any', value)];
+          if (key == 'in') return [where(fieldName, 'in', value)];
+          if (key == 'not-in') return [where(fieldName, 'not-in', value)];
+          if (key == 'contains')
+            return [
+              where(fieldName, '>=', value.toLocaleLowerCase()),
+              where(fieldName, '<=', `${value.toLocaleLowerCase()}\uf8ff`),
+            ];
+          return [where(fieldName, '==', value)];
+        }
+      );
     } else {
       return [where(fieldName, '==', fieldValue)];
     }
