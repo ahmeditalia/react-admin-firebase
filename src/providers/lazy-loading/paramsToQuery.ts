@@ -73,27 +73,27 @@ export function getFiltersConstraints(filters: {
   [fieldName: string]: any;
 }): QueryConstraint[] {
   const queries = Object.entries(filters).flatMap(([fieldName, fieldValue]) => {
-    const key = fieldName.split('_')[1];
+    const [name, key] = fieldName.split('_');
     if (key) {
-      if (key == 'equals') return [where(fieldName, '==', fieldValue)];
-      if (key == 'notEquals') return [where(fieldName, '!=', fieldValue)];
-      if (key == 'gte') return [where(fieldName, '>=', fieldValue)];
-      if (key == 'gt') return [where(fieldName, '>', fieldValue)];
-      if (key == 'lte') return [where(fieldName, '<=', fieldValue)];
-      if (key == 'lt') return [where(fieldName, '<', fieldValue)];
+      if (key == 'equals') return [where(name, '==', fieldValue)];
+      if (key == 'notEquals') return [where(name, '!=', fieldValue)];
+      if (key == 'gte') return [where(name, '>=', fieldValue)];
+      if (key == 'gt') return [where(name, '>', fieldValue)];
+      if (key == 'lte') return [where(name, '<=', fieldValue)];
+      if (key == 'lt') return [where(name, '<', fieldValue)];
       if (key == 'array-contains')
-        return [where(fieldName, 'array-contains', fieldValue)];
+        return [where(name, 'array-contains', fieldValue)];
       if (key == 'array-contains-any')
-        return [where(fieldName, 'array-contains-any', fieldValue)];
-      if (key == 'in') return [where(fieldName, 'in', fieldValue)];
-      if (key == 'not-in') return [where(fieldName, 'not-in', fieldValue)];
+        return [where(name, 'array-contains-any', fieldValue)];
+      if (key == 'in') return [where(name, 'in', fieldValue)];
+      if (key == 'not-in') return [where(name, 'not-in', fieldValue)];
       if (key == 'contains')
         return [
-          where(fieldName, '>=', fieldValue.toLocaleLowerCase()),
-          where(fieldName, '<=', `${fieldValue.toLocaleLowerCase()}\uf8ff`),
+          where(name, '>=', fieldValue.toLocaleLowerCase()),
+          where(name, '<=', `${fieldValue.toLocaleLowerCase()}\uf8ff`),
         ];
     }
-    return [where(fieldName, '==', fieldValue)];
+    return [where(name, '==', fieldValue)];
   });
   console.log(queries);
   return queries;
