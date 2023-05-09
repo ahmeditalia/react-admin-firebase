@@ -92,6 +92,11 @@ export function getFiltersConstraints(filters: {
           where(name, '>=', fieldValue.toLocaleLowerCase()),
           where(name, '<=', `${fieldValue.toLocaleLowerCase()}\uf8ff`),
         ];
+      if (key == 'containsSensitive')
+        return [
+          where(name, '>=', fieldValue),
+          where(name, '<=', `${fieldValue}\uf8ff`),
+        ];
     }
     return [where(name, '==', fieldValue)];
   });
